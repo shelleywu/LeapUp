@@ -1,0 +1,56 @@
+<html>
+  <head>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="http://js.leapmotion.com/leap-0.6.4.js"></script>
+    <script type="text/javascript">
+    var leapHelper = {
+  isListening: false,
+  
+  startListening: function() {
+    leapHelper.isListening = true;
+  },
+  stopListening: function() {
+    leapHelper.isListening = false;
+  },
+  resumeListening: function() {
+    setTimeout(leapHelper.startListening, 500);
+  }
+}
+
+var options = null;
+
+$(document).ready(function() {
+  leapHelper.startListening();
+  
+  Leap.loop(options, function(frame) {
+    if(!leapHelper.isListening) {
+      return;
+    }
+
+    $("#output").text("GESTURES TEST");
+    leapHelper.stopListening();
+    frame.hands.forEach(function(hand, index) {
+      var middleFinger = hand.middleFinger.extended;
+      var indexFinger = hand.indexFinger.extended;
+      var ringFinger = hand.ringFinger.extended;
+      var thumb = hand.thumb.extended;
+
+      /**
+      Who would extend their middle finger to give a thumbs up????? Who does that???? same with ring and index
+      **/
+      if(thumb && !middleFinger && !ringFinger && !indexFinger)
+      {
+        $("#output").text("GOOD JOB!!");
+      }
+    });
+  
+    leapHelper.resumeListening();
+  });
+});
+</script>
+  </head>
+  
+  <body>
+    <p id="output"></p>
+  </body>
+</html>
